@@ -1,0 +1,49 @@
+stages:
+  data_injestion:
+    cmd: python SRC/data_injestion.py
+    deps:
+    - SRC/data_injestion.py
+    # params:
+    # - data_injestion.test_size
+    outs:
+    - data/raw
+  data_preprocessing:
+    cmd: python SRC/data_preprocessing.py
+    deps:
+    - data/raw
+    - SRC/data_preprocessing.py
+    outs:
+    - data/interim
+  feature_engineering:
+    cmd: python SRC/feature_engineering.py
+    deps:
+    - data/interim
+    - SRC/feature_engineering.py
+    # params:
+    # - feature_engineering.max_features
+    outs:
+    - data/processed
+  model_building:
+    cmd: python SRC/model_building.py
+    deps:
+    - data/processed
+    - SRC/model_building.py
+    # params:
+    # - model_building.n_estimators
+    # - model_building.random_state
+    outs:
+    - models/model.pkl
+  model_evaluation:
+    cmd: python SRC/model_evaluation.py
+    deps:
+    - models/model.pkl
+    - SRC/model_evaluation.py
+    metrics:
+    - reports/metrics.json
+# metrics:
+# - dvclive/metrics.json
+# plots:
+# - dvclive/plots/metrics:
+#     x: step
+# params:
+# - dvclive/params.yaml
